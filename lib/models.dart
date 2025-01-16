@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Libro {
   final int id;
   final String nombre;
@@ -26,12 +28,16 @@ class Libro {
 
 class Usuario {
   final int id;
+  final String nombre;
+  final String apellidos;
   final String nombreUsuario;
   final String password;
   final String email;
 
   Usuario({
     required this.id,
+    required this.nombre,
+    required this.apellidos,
     required this.nombreUsuario,
     required this.password,
     required this.email
@@ -67,5 +73,19 @@ class LibroUsuario {
       'nota': nota,
       'opinion': opinion,
     };
+  }
+}
+
+class Sesion with ChangeNotifier {
+  Usuario? user;
+
+  void login(Usuario u) {
+    user = u;
+    notifyListeners();
+  }
+
+  void logout(){
+    user = null;
+    notifyListeners();
   }
 }

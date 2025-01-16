@@ -26,8 +26,11 @@ class Db {
           '''
           CREATE TABLE usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre VARCHAR(255) NOT NULL,
+            apellidos VARCHAR(255) NOT NULL,
             nombre_usuario VARCHAR(255) NOT NULL,
-            password VARCHAR(255) NOT NULL
+            password VARCHAR(255) NOT NULL,
+            email VARCHAR(255) NOT NULL
           )
           ''');
 
@@ -47,10 +50,10 @@ class Db {
 
         await db.execute(
           '''
-          INSERT INTO `usuarios` (`nombre_usuario`, `password`) VALUES
-          ('user1', '1234'),
-          ('user2', '4321'),
-          ('user3', 'pass');
+          INSERT INTO `usuarios` (`nombre`, `apellidos`,`nombre_usuario`, `password`, `email`) VALUES
+          ('Diego', 'Vega','user1', '1234', 'user1@gmail.com'),
+          ('Sergio', 'Perez','user2', '4321', 'user2@gmail.com'),
+          ('Pablo', 'Alvarez','user3', 'pass', 'user3@gmail.com');
           '''
         );
         
@@ -134,6 +137,8 @@ class Db {
     return List.generate(usuariosMap.length, 
       (i) => Usuario(
         id: usuariosMap[i]['id'],
+        nombre: usuariosMap[i]['nombre'],
+        apellidos: usuariosMap[i]['apellidos'],
         nombreUsuario: usuariosMap[i]['nombreUsuario'],
         password: usuariosMap[i]['password'],
         email: usuariosMap[i]['email']
