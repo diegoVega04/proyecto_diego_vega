@@ -1,15 +1,20 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'models.dart';
 
 class Db {
-  
-  //crear y/o acceder a la base de datos sqlite
+  //configuraciones previas a abrir la base de datos
   static Future<Database> _openDB() async {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+
+    // Abrir o crear la base de datos
     return openDatabase(
       join(await getDatabasesPath(), 'gestorLibros.db'),
-      onCreate: (db, version) async {
-        // Crear la tabla libros
+
+        version: 1,
+        onCreate: (db, version) async {
         await db.execute(
           '''
           CREATE TABLE libros (
@@ -19,9 +24,9 @@ class Db {
             genero VARCHAR(255),
             descripcion TEXT
           )
-          ''');
+          ''',
+        );
 
-        // Crear la tabla usuarios
         await db.execute(
           '''
           CREATE TABLE usuarios (
@@ -32,9 +37,9 @@ class Db {
             password VARCHAR(255) NOT NULL,
             email VARCHAR(255) NOT NULL
           )
-          ''');
+          ''',
+        );
 
-        // Crear la tabla lisbros_usuario
         await db.execute(
           '''
           CREATE TABLE libros_usuario (
@@ -46,20 +51,21 @@ class Db {
             FOREIGN KEY (id_usuario) REFERENCES usuarios (id),
             FOREIGN KEY (id_libro) REFERENCES libros (id)
           )
-          ''');
+          ''',
+        );
 
         await db.execute(
           '''
-          INSERT INTO `usuarios` (`nombre`, `apellidos`,`nombre_usuario`, `password`, `email`) VALUES
-          ('Diego', 'Vega','user1', '1234', 'user1@gmail.com'),
-          ('Sergio', 'Perez','user2', '4321', 'user2@gmail.com'),
-          ('Pablo', 'Alvarez','user3', 'pass', 'user3@gmail.com');
+          INSERT INTO usuarios (nombre, apellidos, nombre_usuario, password, email) VALUES
+          ('Diego', 'Vega', 'user1', '1234', 'user1@gmail.com'),
+          ('Sergio', 'Perez', 'user2', '4321', 'user2@gmail.com'),
+          ('Pablo', 'Alvarez', 'user3', 'pass', 'user3@gmail.com');
           '''
         );
-        
+
         await db.execute(
           '''
-          INSERT INTO `libros` (`nombre`, `publicacion`, `genero`, `descripcion`) VALUES
+          INSERT INTO libros (nombre, publicacion, genero, descripcion) VALUES
           ('1984', '1949-06-08', 'Distopía', 'Una novela que explora un mundo distópico controlado por el Gran Hermano.'),
           ('Cien años de soledad', '1967-05-30', 'Realismo Mágico', 'Una obra maestra de Gabriel García Márquez que narra la historia de la familia Buendía.'),
           ('El principito', '1943-04-06', 'Fábula', 'Un pequeño príncipe viaja por el universo descubriendo el valor de la amistad y el amor.'),
@@ -69,7 +75,7 @@ class Db {
 
         await db.execute(
           '''
-          INSERT INTO `libros_usuario` (`id_usuario`, `id_libro`, `nota`, `opinion`) VALUES
+          INSERT INTO libros_usuario (id_usuario, id_libro, nota, opinion) VALUES
           (1, 1, 9, 'Una lectura fascinante y aterradora, muy recomendable.'),
           (1, 2, 8, 'Me gustó mucho la profundidad de los personajes.'),
           (2, 3, 10, 'Un libro hermoso y conmovedor, lleno de enseñanzas.'),
@@ -77,7 +83,6 @@ class Db {
           '''
         );
       },
-      version: 1,
     );
   }
 
@@ -139,7 +144,7 @@ class Db {
         id: usuariosMap[i]['id'],
         nombre: usuariosMap[i]['nombre'],
         apellidos: usuariosMap[i]['apellidos'],
-        nombreUsuario: usuariosMap[i]['nombreUsuario'],
+        nombreUsuario: usuariosMap[i]['nombre_usuario'],
         password: usuariosMap[i]['password'],
         email: usuariosMap[i]['email']
       ));

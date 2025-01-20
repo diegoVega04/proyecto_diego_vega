@@ -46,10 +46,17 @@ class Usuario {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'nombre': nombre,
+      'apellidos': apellidos,
       'nombre_usuario': nombreUsuario,
       'password': password,
       'email': email
     };
+  }
+
+  @override
+  String toString() {
+    return "$nombreUsuario: $nombre $apellidos, $email";
   }
 }
 
