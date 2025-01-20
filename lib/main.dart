@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -20,19 +21,11 @@ void main() async{
     create: (context) => Sesion(),
     child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: const Login(),
+        home: Inicio(),
   )));
 }
 
-class Login extends StatefulWidget {
-  const Login({super.key});
-  
-  @override
-  State<StatefulWidget> createState() => _Login();
-}
-
-class _Login extends State<Login> {
-
+class Inicio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sesion = Provider.of<Sesion>(context, listen: false);
@@ -60,5 +53,61 @@ class _Login extends State<Login> {
         ],),
       )
     );
+  }
+}
+
+class Login extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _Login();
+}
+
+class _Login extends State<Login> {
+  List<Usuario> usuarios = [];
+  TextEditingController _conName = TextEditingController();
+  TextEditingController _conPass = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarDatos();
+  }
+
+  Future<void> _cargarDatos() async {
+    List<Usuario> a = await Db.getUsuarios();
+    setState(() {
+      usuarios = a;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Inicio de sesion")),
+      body: Center(
+        child: usuarios.isEmpty
+        ? CircularProgressIndicator()
+        : Row(children: [
+          Column(children: [
+            Contenedor(label: "nombre usuario", hint: "introduzca nombre de usaurio", margen: 10, padding: 0, 
+            a: TextField(
+              controller: _conName,
+            )),
+            Contenedor(label: "contraseña", hint: "introduzca su contraseña", margen: 10, padding: 0, 
+            a: TextField(
+              controller: _conPass,
+            ))
+          ],),
+          IconButton(
+            onPressed: () {
+
+            }, 
+            icon: Icon(Icons.send))
+        ],)
+      )
+      );}
+  
+  bool comprobarDatos(nom, pass) {
+
+    return true;
   }
 }

@@ -81,11 +81,11 @@ class _Inicio extends State<Inicio> {
     final sesion = Provider.of<Sesion>(context, listen: false);
 
     return usuarios.isEmpty
-    ? CircularProgressIndicator() // Muestra un indicador de carga si usuarios está vacío
+    ? Center(child: CircularProgressIndicator())
     : Center(child: Column(
         children: [
           Text(sesion.user!.nombre),
-          Text(usuarios[0].toString()), // Mostrar el primer usuario
+          Text(usuarios[0].toString()),
         ],
       ));
   }
