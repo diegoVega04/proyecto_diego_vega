@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto_diego_vega/db.dart';
+//import 'package:proyecto_diego_vega/db.dart';
 import 'package:proyecto_diego_vega/models.dart';
 
 class Principal extends StatefulWidget {
@@ -23,6 +23,7 @@ class _Principal extends State<Principal> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(title: Center(child: Text("MyBooks"))),
       body: _screens[_currentIndex],
@@ -61,32 +62,10 @@ class Inicio extends StatefulWidget {
 
 class _Inicio extends State<Inicio> {
 
-  List<Usuario> usuarios = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _cargarDatos();
-  }
-
-  Future<void> _cargarDatos() async {
-    List<Usuario> a = await Db.getUsuarios();
-    setState(() {
-      usuarios = a;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final sesion = Provider.of<Sesion>(context, listen: false);
 
-    return usuarios.isEmpty
-    ? Center(child: CircularProgressIndicator())
-    : Center(child: Column(
-        children: [
-          Text(sesion.user!.nombre),
-          Text(usuarios[0].toString()),
-        ],
-      ));
+    return Center(child: Text(sesion.user!.toString()));
   }
 }
